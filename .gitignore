@@ -6,10 +6,19 @@
 !keybindings.json
 !snippets/
 !snippets/*.json
+!profiles/
+!profiles/**/
 !tasks.json
 !launch.json
 !projects.json
 !extensions.list
+
+#
+!extensions.bat
+!extensions.cmd
+!extensions.ps1
+!extensions.sh
+!README.md
 !.gitignore
 
 # Игнорируем кэш, историю и локальные базы данных
