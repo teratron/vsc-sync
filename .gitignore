@@ -1,0 +1,28 @@
+# Игнорируем всё по умолчанию
+*
+
+# Разрешаем отслеживать только важные файлы конфигурации
+!settings.json
+!keybindings.json
+!snippets/
+!snippets/*.json
+!tasks.json
+!launch.json
+!projects.json
+!extensions.list
+!.gitignore
+
+# Игнорируем кэш, историю и локальные базы данных
+workspaceStorage/
+globalStorage/
+backups/
+cachedData/
+logs/
+User/History/
+User/workspaceStorage/
+
+# Игнорируем файлы расширений (их лучше восстанавливать скриптом)
+extensions/
+
+# Если используете расширение для синхронизации, игнорируем его локальные токены
+syncLocalSettings.json
