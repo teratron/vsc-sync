@@ -13,13 +13,10 @@
 !projects.json
 !extensions.list
 
-#
-!extensions.bat
-!extensions.cmd
-!extensions.ps1
-!extensions.sh
-!README.md
+# Скрипты и документация
+!.scripts/
 !.gitignore
+!README.md
 
 # Игнорируем кэш, историю и локальные базы данных
 workspaceStorage/

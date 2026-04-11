@@ -6,19 +6,25 @@
 
 | Файл | Для чего | Запуск |
 | --- | --- | --- |
-| `extensions.ps1` | PowerShell (рекомендуется для Windows 11) | `.\extensions.ps1 list` |
-| `extensions.bat` | Командная строка Windows | `extensions.bat list` |
-| `extensions.cmd` | Командная строка Windows | `extensions.cmd list` |
-| `extensions.sh` | Git Bash / WSL | `./extensions.sh list` |
+| `.scripts/Sync-Settings.ps1` | Windows: Синхронизация и запуск | `.\.scripts\Sync-Settings.ps1` |
+| `.scripts/sync.sh` | macOS/Linux: Синхронизация и запуск | `bash .scripts/sync.sh` |
+| `.scripts/extensions.ps1` | Управление расширениями (Win) | `.\.scripts\extensions.ps1` |
 
-## Команды
+## Автоматизация (Sync & Start)
 
-| Команда | Описание |
-| --- | --- |
-| `list` | Экспортировать установленные расширения в `extensions.list` |
-| `install` | Установить расширения из файла `extensions.list` |
-| `show` | Показать установленные расширения |
-| `help` | Показать справку |
+Скрипты синхронизации автоматизируют:
+1. `git pull --rebase` для получения настроек.
+2. Установку расширений из `extensions.list`.
+3. Запуск VSCodium.
+
+### Как использовать:
+
+1. Создайте ярлык для `Sync-Settings.ps1` на рабочем столе.
+2. В свойствах ярлыка в поле "Объект" (Target) укажите:
+   ```plaintext
+   powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\Oleg\AppData\Roaming\VSCodium\User\.scripts\Sync-Settings.ps1"
+   ```
+3. Используйте этот ярлык вместо стандартного для запуска VSCodium.
 
 ## Быстрый старт
 
