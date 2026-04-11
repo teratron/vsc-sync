@@ -1,39 +1,35 @@
-# Игнорируем всё по умолчанию
+# 1. Глобальный запрет
 *
 
-# Разрешаем отслеживать только важные файлы конфигурации (Default profile)
-!settings.json
-!keybindings.json
-!snippets/
-!snippets/*.json
-!tasks.json
-!launch.json
-!projects.json
-!extensions.list
-
-# Поддержка профилей (разрешаем структуру и конфиги внутри profiles/)
-!profiles/
-!profiles/*/
-!profiles/*/settings.json
-!profiles/*/keybindings.json
-!profiles/*/extensions.list
-!profiles/*/snippets/
-!profiles/*/snippets/*.json
-!profiles/*/tasks.json
-!profiles/*/launch.json
-
-# Скрипты и документация
+# 2. Разрешаем структуру папок (необходимо для вложенных правил)
+!*/
 !.scripts/
+
+# 3. Белый список файлов (Корень и Профили)
+!**/settings.json
+!**/keybindings.json
+!**/tasks.json
+!**/launch.json
+!**/projects.json
+!**/extensions.list
+!**/snippets/
+!**/snippets/*.json
+
+# 4. Скрипты, документация и сам gitignore
 !.gitignore
 !README.md
+!.scripts/*
 
-# Игнорируем специфические файлы и папки VSCodium
+# 5. Исключения (защита от специфического мусора)
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
 workspaceStorage/
 globalStorage/
 backups/
 cachedData/
 logs/
 User/History/
-User/workspaceStorage/
 extensions/
 syncLocalSettings.json
