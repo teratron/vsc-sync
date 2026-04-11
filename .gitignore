@@ -1,24 +1,33 @@
 # Игнорируем всё по умолчанию
 *
 
-# Разрешаем отслеживать только важные файлы конфигурации
+# Разрешаем отслеживать только важные файлы конфигурации (Default profile)
 !settings.json
 !keybindings.json
 !snippets/
 !snippets/*.json
-!profiles/
-!profiles/**/
 !tasks.json
 !launch.json
 !projects.json
 !extensions.list
+
+# Поддержка профилей (разрешаем структуру и конфиги внутри profiles/)
+!profiles/
+!profiles/*/
+!profiles/*/settings.json
+!profiles/*/keybindings.json
+!profiles/*/extensions.list
+!profiles/*/snippets/
+!profiles/*/snippets/*.json
+!profiles/*/tasks.json
+!profiles/*/launch.json
 
 # Скрипты и документация
 !.scripts/
 !.gitignore
 !README.md
 
-# Игнорируем кэш, историю и локальные базы данных
+# Игнорируем специфические файлы и папки VSCodium
 workspaceStorage/
 globalStorage/
 backups/
@@ -26,9 +35,5 @@ cachedData/
 logs/
 User/History/
 User/workspaceStorage/
-
-# Игнорируем файлы расширений (их лучше восстанавливать скриптом)
 extensions/
-
-# Если используете расширение для синхронизации, игнорируем его локальные токены
 syncLocalSettings.json

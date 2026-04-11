@@ -1,103 +1,91 @@
-# VSCodium
+# VSCodium Settings Sync
 
-Скрипты для управления расширениями VSCodium: экспорт, установка и просмотр.
+Репозиторий для хранения и синхронизации настроек VSCodium между разными компьютерами через GitHub.
 
-## Доступные скрипты
+## 📂 Структура репозитория
 
-| Файл | Для чего | Запуск |
+- `settings.json`, `keybindings.json` — основные конфигурации.
+- `extensions.list` — список установленных расширений.
+- `snippets/` — ваши пользовательские сниппеты.
+- `.scripts/` — инструменты для автоматизации.
+
+## 🚀 Доступные инструменты
+
+| Файл | Назначение | Команда запуска |
 | --- | --- | --- |
-| `.scripts/Sync-Settings.ps1` | Windows: Синхронизация и запуск | `.\.scripts\Sync-Settings.ps1` |
-| `.scripts/sync.sh` | macOS/Linux: Синхронизация и запуск | `bash .scripts/sync.sh` |
-| `.scripts/extensions.ps1` | Управление расширениями (Win) | `.\.scripts\extensions.ps1` |
+| **Sync.ps1** | Windows (PowerShell): Pull + Extensions + запуск | `.\.scripts\Sync.ps1` |
+| **sync.bat** / **sync.cmd** | Windows (CMD): Pull + Extensions + запуск | `.\.scripts\sync.bat` |
+| **sync.sh** | macOS/Linux: Pull + Extensions + запуск | `bash .scripts/sync.sh` |
+| **Extensions.ps1** | Манипуляция расширениями (Win PS) | `.\.scripts\Extensions.ps1` |
 
-## Автоматизация (Sync & Start)
+## 🛠 Автоматизация запуска (Sync & Start)
 
-Скрипты синхронизации автоматизируют:
-1. `git pull --rebase` для получения настроек.
-2. Установку расширений из `extensions.list`.
-3. Запуск VSCodium.
+Скрипты `sync` автоматизируют весь процесс при старте IDE:
 
-### Как использовать:
+1. Выполняют `git pull --rebase` для загрузки свежих настроек.
+2. Обновляют расширения для **всех** профилей (`sync-all`).
+3. Запускают VSCodium.
 
-1. Создайте ярлык для `Sync-Settings.ps1` на рабочем столе.
-2. В свойствах ярлыка в поле "Объект" (Target) укажите:
+### Настройка ярлыка для Windows
+
+Для удобства создайте ярлык на рабочем столе:
+
+1. **Объект (Target):**
+
    ```plaintext
-   powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\Oleg\AppData\Roaming\VSCodium\User\.scripts\Sync-Settings.ps1"
+   powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%APPDATA%\VSCodium\User\.scripts\Sync.ps1"
    ```
-3. Используйте этот ярлык вместо стандартного для запуска VSCodium.
 
-## Быстрый старт
+2. **Рабочая папка (Start in):** `%APPDATA%\VSCodium\User`
 
-### PowerShell (рекомендуется)
+## 👥 Поддержка профилей
+
+Скрипты автоматически распознают ваши профили VSCodium (например, **Python**, **Rust**, **Go**).
+
+- `extensions.list` — расширения профиля по умолчанию (Default).
+- `extensions.<Name>.list` — расширения для именованных профилей.
+
+### Команды командной строки (PowerShell)
 
 ```powershell
-# Сохранить текущие расширения
-.\extensions.ps1 list
+# Синхронизировать ВСЕ профили сразу (используется в Sync.ps1)
+.\.scripts\Extensions.ps1 sync-all
 
-# Посмотреть установленные расширения
-.\extensions.ps1 show
+# Экспортировать списки для ВСЕХ профилей в репозиторий
+.\.scripts\Extensions.ps1 list-all
 
-# Установить расширения из файла
-.\extensions.ps1 install
+# Работа с конкретным профилем
+.\.scripts\Extensions.ps1 list Work
+.\.scripts\Extensions.ps1 install Work
 ```
 
-### Командная строка
-
-```cmd
-extensions.bat list
-extensions.bat show
-extensions.bat install
-```
-
-### Git Bash / WSL
+### Git Bash / WSL / macOS
 
 ```bash
-./extensions.sh list
-./extensions.sh show
-./extensions.sh install
+# Работа с конкретным профилем
+bash .scripts/extensions.sh list Work
+bash .scripts/extensions.sh install Work
 ```
 
-## Формат файла extensions.list
+## ⚙️ Настройка нового устройства
 
-```plaintext
-# Это комментарий - строки с # игнорируются
-publisher.extension1
-publisher.extension2
-```
+1. Установите VSCodium.
+2. Склонируйте репозиторий в папку настроек:
+   - Windows: `%APPDATA%\VSCodium\User`
+   - macOS: `~/Library/Application Support/VSCodium/User`
+   - Linux: `~/.config/VSCodium/User`
+3. Запустите соответствующий скрипт `sync` для вашей ОС.
 
-## Настройка для PowerShell
+## 📜 Примечания
 
-Если при запуске появляется ошибка выполнения скриптов:
+### Ошибки выполнения PowerShell
+
+Если скрипты не запускаются, выполните в терминале от имени пользователя:
 
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 ```
 
-## Требования
+### .gitignore
 
-- VSCodium должен быть установлен и добавлен в PATH
-- Или установлен в стандартную директорию:
-  - `C:\Program Files\VSCodium\`
-  - `C:\Program Files (x86)\VSCodium\`
-
-## Примеры использования
-
-### Перенос расширений на другой компьютер
-
-1. На старом ПК: `.\extensions.ps1 list`
-2. Скопировать файл `extensions.list`
-3. На новом ПК: `.\extensions.ps1 install`
-
-### Резервное копирование
-
-```powershell
-.\extensions.ps1 list
-# Сохранить extensions.list в безопасное место
-```
-
-### Восстановление из резервной копии
-
-```powershell
-# Поместить extensions.list в директорию скрипта
-.\extensions.ps1 install
-```
+Файл `.gitignore` настроен на исключение временных файлов, логов и кэша, сохраняя только важные настройки.
