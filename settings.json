@@ -1,12 +1,12 @@
 {
-    "terminal.integrated.commandsToSkipShell": [
-        "kilo-code.new.agentManagerOpen",
-        "kilo-code.new.agentManager.showTerminal"
-    ],
-    "geminicodeassist.project": "peta-folio-zfcgj",
     "files.autoSave": "afterDelay",
     "git.confirmSync": false,
     "git.enableSmartCommit": true,
     "git.autofetch": true,
-    "task.allowAutomaticTasks": "on"
+    "task.allowAutomaticTasks": "on",
+    "terminal.integrated.commandsToSkipShell": [
+        "kilo-code.new.agentManagerOpen",
+        "kilo-code.new.agentManager.showTerminal"
+    ],
+    "geminicodeassist.project": "peta-folio-zfcgj"
 }

@@ -19,9 +19,7 @@
                 "runOn": "default"
             },
             "presentation": {
-                "reveal": "never",
-                "showInExplorer": false,
-                "hidden": true
+                "reveal": "never"
             }
         }
     ]
