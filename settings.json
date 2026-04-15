@@ -4,5 +4,6 @@
         "kilo-code.new.agentManager.showTerminal"
     ],
     "geminicodeassist.project": "peta-folio-zfcgj",
-    "files.autoSave": "afterDelay"
+    "files.autoSave": "afterDelay",
+    "git.confirmSync": false
 }
