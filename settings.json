@@ -6,5 +6,7 @@
     "geminicodeassist.project": "peta-folio-zfcgj",
     "files.autoSave": "afterDelay",
     "git.confirmSync": false,
-    "git.enableSmartCommit": true
+    "git.enableSmartCommit": true,
+    "git.autofetch": true,
+    "task.allowAutomaticTasks": "on"
 }
