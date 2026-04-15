@@ -2,24 +2,17 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Sync Settings",
+            "label": "Sync (Startup)",
             "type": "shell",
-            "command": "${workspaceFolder}/.scripts/Sync.ps1",
+            "command": "pwsh",
+            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/.scripts/Sync.ps1"],
             "problemMatcher": [],
             "runOptions": {
                 "runOn": "folderOpen"
-            }
-        },
-        {
-            "label": "Sync (Startup)",
-            "type": "shell",
-            "command": "git pull --rebase",
-            "problemMatcher": [],
-            "runOptions": {
-                "runOn": "default"
             },
             "presentation": {
-                "reveal": "never"
+                "reveal": "never",
+                "hidden": true
             }
         }
     ]
