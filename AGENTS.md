@@ -16,7 +16,7 @@ Consistency in communication and code is paramount.
 - **Process**: Commit messages, pull request descriptions, and issue titles.
 - **Interaction**: Chat discussions, explanations, and strategic planning.
 
-## 5. Completion Protocol (Mandatory Checklist)
+## 2. Completion Protocol (Mandatory Checklist)
 
 Before finishing any task, the agent MUST verify the following:
 
