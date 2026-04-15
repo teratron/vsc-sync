@@ -1,4 +1,4 @@
-# VSCodium Settings Sync
+# VSCodium Settings Sync-
 
 Репозиторий для хранения и синхронизации настроек VSCodium между разными компьютерами через GitHub.
 
