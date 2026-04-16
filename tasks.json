@@ -5,7 +5,25 @@
             "label": "Sync (Startup)",
             "type": "shell",
             "command": "pwsh",
-            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/.scripts/Sync.ps1"],
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "${workspaceFolder}/.scripts/Sync.ps1"
+            ],
+            "linux": {
+                "command": "bash",
+                "args": [
+                    "${workspaceFolder}/.scripts/sync.sh"
+                ]
+            },
+            "osx": {
+                "command": "bash",
+                "args": [
+                    "${workspaceFolder}/.scripts/sync.sh"
+                ]
+            },
             "problemMatcher": [],
             "runOptions": {
                 "runOn": "folderOpen"

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=VSCodium Sync
+Comment=Синхронизация настроек и запуск VSCodium
+Exec=env bash -lc "$HOME/.config/VSCodium/User/.scripts/launch.sh"
+Icon=vscodium
+Terminal=false
+Categories=Development;IDE;Utility;
+StartupNotify=true

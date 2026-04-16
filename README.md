@@ -16,19 +16,39 @@
 | Файл | Назначение | Команда запуска |
 | --- | --- | --- |
 | **Sync.ps1** | Windows (PowerShell): Pull + Extensions + запуск | `.\.scripts\Sync.ps1` |
-| **sync.bat** / **sync.cmd** | Windows (CMD): Pull + Extensions + запуск | `.\.scripts\sync.bat` |
 | **sync.sh** | macOS/Linux: Pull + Extensions + запуск | `bash .scripts/sync.sh` |
+| **Launch.ps1** | Windows (PowerShell): Pull + Sync + запуск IDE | `.\.scripts\Launch.ps1` |
+| **launch.sh** | macOS/Linux: Pull + Sync + запуск IDE | `bash .scripts/launch.sh` |
 | **Extensions.ps1** | Манипуляция расширениями (Win PS) | `.\.scripts\Extensions.ps1` |
 
 ## 🛠 Автоматизация запуска (Sync & Start)
 
-Скрипты `sync` автоматизируют весь процесс при старте IDE:
+В проекте есть два режима автоматизации.
+
+### 1. Автосинхронизация после открытия папки в IDE
+
+Файл `tasks.json` запускает задачу `Sync (Startup)` при `folderOpen`.
+
+- Windows: запускается `Sync.ps1`
+- Linux/macOS: запускается `sync.sh`
+
+Это удобно, если VSCodium уже открыт и вы открываете папку `User` как workspace.
+
+### 2. Полный pre-launch сценарий
+
+Если нужен именно сценарий «запустил IDE -> сначала `git pull` и синхронизация -> потом открылось окно VSCodium», используйте launcher-скрипты:
+
+- Windows: `.scripts/Launch.ps1`
+- Linux/macOS: `.scripts/launch.sh`
+
+Они делают:
 
 1. Выполняют `git pull --rebase` для загрузки свежих настроек.
 2. Обновляют расширения для **всех** профилей (`sync-all`).
 3. Создают недостающие профили по имени.
 4. Копируют настройки профилей из `profile-templates/` в локальные папки VSCodium.
 5. Устанавливают расширения для default-профиля и всех именованных профилей.
+6. Запускают VSCodium с папкой `User`.
 
 ### Настройка ярлыка для Windows
 
@@ -37,10 +57,28 @@
 1. **Объект (Target):**
 
    ```plaintext
-   powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%APPDATA%\VSCodium\User\.scripts\Sync.ps1"
+   powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%APPDATA%\VSCodium\User\.scripts\Launch.ps1"
    ```
 
 2. **Рабочая папка (Start in):** `%APPDATA%\VSCodium\User`
+
+### Запуск на Linux
+
+Можно запускать так:
+
+```bash
+bash ~/.config/VSCodium/User/.scripts/launch.sh
+```
+
+Или использовать готовый `.desktop` шаблон из `.scripts/vscodium-sync.desktop`.
+
+Установка `.desktop`:
+
+```bash
+mkdir -p ~/.local/share/applications
+cp ~/.config/VSCodium/User/.scripts/vscodium-sync.desktop ~/.local/share/applications/vscodium-sync.desktop
+update-desktop-database ~/.local/share/applications 2>/dev/null || true
+```
 
 ## 👥 Поддержка профилей
 
