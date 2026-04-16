@@ -1,0 +1,8 @@
+{
+    "terminal.integrated.commandsToSkipShell": [
+        "kilo-code.new.agentManagerOpen",
+        "kilo-code.new.agentManager.showTerminal"
+    ],
+    "geminicodeassist.project": "peta-folio-zfcgj",
+    "files.autoSave": "afterDelay"
+}

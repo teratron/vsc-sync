@@ -19,7 +19,7 @@
 !.gitignore
 !README.md
 !AGENTS.md
-!.scripts/*
+!profiles.list
 
 # 5. Исключения (защита от специфического мусора)
 .DS_Store
