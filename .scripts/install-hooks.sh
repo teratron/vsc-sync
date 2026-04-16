@@ -16,5 +16,5 @@ fi
 chmod +x .githooks/pre-commit
 chmod +x .scripts/*.sh
 
-git config core.hooksPath .githooks
-echo "Git hooks path configured: .githooks"
+git config --local core.hooksPath .githooks
+echo "Git hooks path configured locally: .githooks"

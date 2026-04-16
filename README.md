@@ -84,6 +84,7 @@
    - macOS: `~/Library/Application Support/VSCodium/User`
    - Linux: `~/.config/VSCodium/User`
 3. Один раз подключите git hooks:
+   - только если хотите автоматический export перед коммитом
    - Windows: `.\.scripts\Install-Hooks.ps1`
    - Linux/macOS: `bash .scripts/install-hooks.sh`
 4. Запускайте IDE через launcher:
@@ -104,7 +105,21 @@
 
 ### Перед коммитом
 
-Если установлен hook, ручной `export` перед коммитом обычно не нужен.
+Используйте один из двух режимов, но не оба сразу.
+
+#### Вариант 1. Ручной export
+
+1. Запустите `Export.ps1` или `export.sh`
+2. Выполните `git add`, `git commit`, `git push`
+
+Этот вариант проще и прозрачнее. Если вы привыкли сами контролировать изменения, он предпочтительнее.
+
+#### Вариант 2. Автоматический export через hook
+
+1. Подключите `.githooks` через `Install-Hooks.ps1` или `install-hooks.sh`
+2. После этого перед коммитом не запускайте ручной `export`
+
+Если установлен hook, ручной `export` перед коммитом больше не нужен, иначе export выполнится дважды.
 
 Hook делает следующее автоматически:
 
@@ -115,10 +130,16 @@ Hook делает следующее автоматически:
 Подключение hook'а:
 
 ```powershell
-git config core.hooksPath .githooks
+git config --local core.hooksPath .githooks
 ```
 
 Или через скрипты `Install-Hooks.ps1` / `install-hooks.sh`.
+
+Отключение hook'а:
+
+```powershell
+git config --local --unset core.hooksPath
+```
 
 ## 🧩 Автоматизация внутри IDE
 
@@ -194,3 +215,13 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 ### Что попадает в git
 
 `.gitignore` настроен так, чтобы сохранять только переносимые настройки, шаблоны профилей, скрипты и versioned hooks.
+
+### Line endings
+
+Файл `.gitattributes` фиксирует line endings для `*.list`, `*.json`, `*.md`, `*.sh`, `.desktop` и `*.ps1`, чтобы на Windows и Linux не появлялись ложные изменения только из-за перевода строк.
+
+Если ранее `core.hooksPath` был записан глобально по ошибке, снимите его так:
+
+```powershell
+git config --global --unset core.hooksPath
+```

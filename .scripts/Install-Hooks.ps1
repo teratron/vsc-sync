@@ -10,8 +10,8 @@ try {
         throw "Git executable was not found."
     }
 
-    git config core.hooksPath .githooks
-    Write-Host "Git hooks path configured: .githooks" -ForegroundColor Green
+    git config --local core.hooksPath .githooks
+    Write-Host "Git hooks path configured locally: .githooks" -ForegroundColor Green
 } finally {
     Pop-Location
 }
