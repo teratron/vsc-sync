@@ -20,6 +20,7 @@
 !AGENTS.md
 !profiles.list
 !.scripts/*
+!.githooks/*
 
 # 5. Исключения (защита от специфического мусора)
 .DS_Store

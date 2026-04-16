@@ -1,0 +1,27 @@
+#!/bin/sh
+# Git hook: перед коммитом экспортирует профили и добавляет их в индекс
+
+set -e
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+if command -v bash >/dev/null 2>&1; then
+    bash ".scripts/export.sh"
+elif command -v powershell.exe >/dev/null 2>&1; then
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".scripts/Export.ps1"
+else
+    echo "Error: no supported shell found to export VSCodium profiles." >&2
+    exit 1
+fi
+
+git add -- \
+    settings.json \
+    extensions.list \
+    profiles.list \
+    profile-templates \
+    snippets \
+    keybindings.json \
+    tasks.json \
+    launch.json \
+    projects.json 2>/dev/null || true

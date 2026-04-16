@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=VSCodium Sync
+Comment=Git pull и синхронизация профилей без запуска IDE
+Exec=env bash -lc "$HOME/.config/VSCodium/User/.scripts/sync.sh"
+Icon=vscodium
+Terminal=true
+Categories=Development;IDE;Utility;
+StartupNotify=true

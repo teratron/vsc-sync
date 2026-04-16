@@ -1,8 +1,8 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=VSCodium Sync
-Comment=Синхронизация настроек и запуск VSCodium
+Name=VSCodium Launch
+Comment=Git pull, синхронизация профилей и запуск VSCodium
 Exec=env bash -lc "$HOME/.config/VSCodium/User/.scripts/launch.sh"
 Icon=vscodium
 Terminal=false

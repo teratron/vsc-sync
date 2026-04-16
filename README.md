@@ -1,153 +1,196 @@
 # VSCodium Settings Sync
 
-Репозиторий для хранения и синхронизации настроек VSCodium между разными компьютерами через GitHub.
+Репозиторий хранит переносимые настройки VSCodium и автоматизирует два направления синхронизации:
+
+- `repo -> local VSCodium` при запуске IDE или при ручном `sync`
+- `local VSCodium -> repo` при ручном `export` и автоматически перед `git commit`
 
 ## 📂 Структура репозитория
 
-- `settings.json`, `keybindings.json` — конфигурация default-профиля.
+- `settings.json`, `keybindings.json`, `snippets/` — переносимые файлы default-профиля.
 - `extensions.list` — список расширений default-профиля.
 - `profiles.list` — список именованных профилей, которые нужно переносить между машинами.
 - `profile-templates/<ProfileName>/` — переносимые шаблоны именованных профилей.
-- `profiles/<hash>/` — локальные рабочие папки VSCodium. Они зависят от машины и не должны считаться переносимым источником истины.
-- `.scripts/` — инструменты для автоматизации.
+- `profiles/<hash>/` — локальные рабочие каталоги VSCodium. Они зависят от машины и не являются переносимым источником истины.
+- `.scripts/` — пользовательские точки входа для всех сценариев.
+- `.githooks/pre-commit` — автoэкспорт профилей перед коммитом.
 
-## 🚀 Доступные инструменты
+## 🔁 Как работает синхронизация
 
-| Файл | Назначение | Команда запуска |
-| --- | --- | --- |
-| **Sync.ps1** | Windows (PowerShell): Pull + Extensions + запуск | `.\.scripts\Sync.ps1` |
-| **sync.sh** | macOS/Linux: Pull + Extensions + запуск | `bash .scripts/sync.sh` |
-| **Launch.ps1** | Windows (PowerShell): Pull + Sync + запуск IDE | `.\.scripts\Launch.ps1` |
-| **launch.sh** | macOS/Linux: Pull + Sync + запуск IDE | `bash .scripts/launch.sh` |
-| **Extensions.ps1** | Манипуляция расширениями (Win PS) | `.\.scripts\Extensions.ps1` |
+### Поток `repo -> local VSCodium`
 
-## 🛠 Автоматизация запуска (Sync & Start)
-
-В проекте есть два режима автоматизации.
-
-### 1. Автосинхронизация после открытия папки в IDE
-
-Файл `tasks.json` запускает задачу `Sync (Startup)` при `folderOpen`.
-
-- Windows: запускается `Sync.ps1`
-- Linux/macOS: запускается `sync.sh`
-
-Это удобно, если VSCodium уже открыт и вы открываете папку `User` как workspace.
-
-### 2. Полный pre-launch сценарий
-
-Если нужен именно сценарий «запустил IDE -> сначала `git pull` и синхронизация -> потом открылось окно VSCodium», используйте launcher-скрипты:
-
-- Windows: `.scripts/Launch.ps1`
-- Linux/macOS: `.scripts/launch.sh`
+Этот поток используют `Sync.ps1`, `sync.sh`, `Launch.ps1`, `launch.sh`.
 
 Они делают:
 
-1. Выполняют `git pull --rebase` для загрузки свежих настроек.
-2. Обновляют расширения для **всех** профилей (`sync-all`).
-3. Создают недостающие профили по имени.
-4. Копируют настройки профилей из `profile-templates/` в локальные папки VSCodium.
-5. Устанавливают расширения для default-профиля и всех именованных профилей.
-6. Запускают VSCodium с папкой `User`.
+1. `git pull --rebase`
+2. `sync-all` для всех профилей
+3. создание отсутствующих профилей по имени
+4. копирование файлов из `profile-templates/<Name>/` в локальные `profiles/<hash>/`
+5. установку расширений для default-профиля и всех именованных профилей
 
-### Настройка ярлыка для Windows
+### Поток `local VSCodium -> repo`
 
-Для удобства создайте ярлык на рабочем столе:
+Этот поток используют `Export.ps1`, `export.sh` и git hook `.githooks/pre-commit`.
 
-1. **Объект (Target):**
+Они делают:
 
-   ```plaintext
-   powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%APPDATA%\VSCodium\User\.scripts\Launch.ps1"
-   ```
+1. читают живые профили из локального `globalStorage/storage.json`
+2. обновляют `profiles.list`
+3. экспортируют `settings.json`, `snippets/` и другие переносимые файлы в `profile-templates/<Name>/`
+4. обновляют `extensions.list` и `profile-templates/<Name>/extensions.list`
 
-2. **Рабочая папка (Start in):** `%APPDATA%\VSCodium\User`
+Именно `export` нужен после установки новых extensions или изменения настроек именованных профилей.
 
-### Запуск на Linux
+## 🚀 Скрипты и сценарии
 
-Можно запускать так:
+### Windows PowerShell
 
-```bash
-bash ~/.config/VSCodium/User/.scripts/launch.sh
-```
+- `.\.scripts\Launch.ps1`
+  - полный сценарий: `git pull` -> `sync` -> запуск VSCodium
+- `.\.scripts\Sync.ps1`
+  - `git pull` и синхронизация профилей без запуска IDE
+- `.\.scripts\Export.ps1`
+  - экспорт текущего состояния профилей и расширений из VSCodium в репозиторий
+- `.\.scripts\Install-Hooks.ps1`
+  - подключение versioned git hooks из `.githooks`
+- `.\.scripts\Extensions.ps1 sync-all`
+  - низкоуровневая синхронизация профилей и расширений
+- `.\.scripts\Extensions.ps1 list-all`
+  - низкоуровневый экспорт всех профилей
 
-Или использовать готовый `.desktop` шаблон из `.scripts/vscodium-sync.desktop`.
+### Linux / macOS
 
-Установка `.desktop`:
+- `bash .scripts/launch.sh`
+  - полный сценарий: `git pull` -> `sync` -> запуск VSCodium
+- `bash .scripts/sync.sh`
+  - `git pull` и синхронизация профилей без запуска IDE
+- `bash .scripts/export.sh`
+  - экспорт текущего состояния профилей и расширений из VSCodium в репозиторий
+- `bash .scripts/install-hooks.sh`
+  - подключение versioned git hooks из `.githooks` и выставление `chmod +x` для shell-скриптов
+- `bash .scripts/extensions.sh sync-all`
+  - низкоуровневая синхронизация профилей и расширений
+- `bash .scripts/extensions.sh list-all`
+  - низкоуровневый экспорт всех профилей
 
-```bash
-mkdir -p ~/.local/share/applications
-cp ~/.config/VSCodium/User/.scripts/vscodium-sync.desktop ~/.local/share/applications/vscodium-sync.desktop
-update-desktop-database ~/.local/share/applications 2>/dev/null || true
-```
+## 🧭 Рекомендуемый рабочий процесс
 
-## 👥 Поддержка профилей
+### Новый компьютер
 
-Скрипты работают с двумя уровнями данных:
-
-- `profiles.list` хранит имена переносимых профилей.
-- `profile-templates/<Name>/` хранит переносимые файлы профиля: `settings.json`, `extensions.list`, `snippets/` и другие поддерживаемые конфиги.
-- `globalStorage/storage.json` используется только локально, чтобы сопоставить имя профиля с текущим machine-specific hash в `profiles/<hash>/`.
-
-Это решает проблему Linux/macOS/Windows, где один и тот же профиль может получить другой hash на новой машине.
-
-### Миграция со старой схемы
-
-Если в репозитории раньше лежали файлы вида `profiles/<hash>/settings.json` и `profiles/<hash>/extensions.list`, их можно оставить локально, но они больше не должны быть переносимым источником истины.
-
-Актуальная схема такая:
-
-- `profile-templates/<Name>/` и `profiles.list` коммитятся в git.
-- `profiles/<hash>/` остаются локальными рабочими папками, которые создаёт и использует сам VSCodium на конкретной машине.
-
-### Команды командной строки (PowerShell)
-
-```powershell
-# Синхронизировать ВСЕ профили сразу (используется в Sync.ps1)
-.\.scripts\Extensions.ps1 sync-all
-
-# Экспортировать default-профиль и ВСЕ именованные профили в переносимые шаблоны
-.\.scripts\Extensions.ps1 list-all
-
-# Работа с конкретным профилем
-.\.scripts\Extensions.ps1 list Work
-.\.scripts\Extensions.ps1 install Work
-```
-
-### Git Bash / WSL / macOS
-
-```bash
-# Синхронизировать все профили из profiles.list
-bash .scripts/extensions.sh sync-all
-
-# Экспортировать все локальные профили в переносимые шаблоны
-bash .scripts/extensions.sh list-all
-
-# Работа с конкретным профилем
-bash .scripts/extensions.sh list Work
-bash .scripts/extensions.sh install Work
-```
-
-## ⚙️ Настройка нового устройства
-
-1. Установите VSCodium.
-2. Склонируйте репозиторий в папку настроек:
+1. Установите VSCodium и Git.
+2. Склонируйте репозиторий:
    - Windows: `%APPDATA%\VSCodium\User`
    - macOS: `~/Library/Application Support/VSCodium/User`
    - Linux: `~/.config/VSCodium/User`
-3. Запустите соответствующий скрипт `sync` для вашей ОС.
+3. Один раз подключите git hooks:
+   - Windows: `.\.scripts\Install-Hooks.ps1`
+   - Linux/macOS: `bash .scripts/install-hooks.sh`
+4. Запускайте IDE через launcher:
+   - Windows: `.\.scripts\Launch.ps1`
+   - Linux/macOS: `bash .scripts/launch.sh`
 
-Если именованный профиль отсутствует на новой машине, скрипт создаст его автоматически по имени через `codium --profile "<Name>"`.
+### Обычный ежедневный запуск
 
-## 📜 Примечания
+- если нужен полный сценарий, запускайте `Launch.ps1` или `launch.sh`
+- если IDE уже открыта, можно запустить только `Sync.ps1` или `sync.sh`
 
-### Ошибки выполнения PowerShell
+### После изменения профилей или extensions
 
-Если скрипты не запускаются, выполните в терминале от имени пользователя:
+- default-профиль меняет файлы в корне репозитория сразу
+- именованные профили и их extensions нужно экспортировать:
+  - Windows: `.\.scripts\Export.ps1`
+  - Linux/macOS: `bash .scripts/export.sh`
+
+### Перед коммитом
+
+Если установлен hook, ручной `export` перед коммитом обычно не нужен.
+
+Hook делает следующее автоматически:
+
+1. запускает `export`
+2. обновляет `profiles.list`
+3. добавляет экспортированные файлы в индекс
+
+Подключение hook'а:
+
+```powershell
+git config core.hooksPath .githooks
+```
+
+Или через скрипты `Install-Hooks.ps1` / `install-hooks.sh`.
+
+## 🧩 Автоматизация внутри IDE
+
+Файл `tasks.json` содержит задачи:
+
+- `Sync (Startup)`
+  - запускается автоматически при `folderOpen`
+- `Sync Now`
+  - ручной запуск синхронизации из IDE
+- `Export Profiles`
+  - ручной экспорт профилей из IDE
+- `Install Git Hooks`
+  - настройка `core.hooksPath` прямо из IDE
+
+Важно: задача `Sync (Startup)` запускается уже после открытия workspace. Поэтому для сценария «сначала `git pull`, потом открыть IDE» нужно использовать `Launch.ps1` или `launch.sh`, а не только задачи IDE.
+
+## 🐧 Linux `.desktop` launchers
+
+В `.scripts/` лежат готовые `.desktop` файлы:
+
+- `launch.desktop`
+  - `git pull` + `sync` + запуск IDE
+- `sync.desktop`
+  - `git pull` + `sync` без запуска IDE
+- `export.desktop`
+  - экспорт профилей и расширений в репозиторий
+- `install-hooks.desktop`
+  - подключение git hooks
+
+Установка всех launcher'ов:
+
+```bash
+mkdir -p ~/.local/share/applications
+cp ~/.config/VSCodium/User/.scripts/*.desktop ~/.local/share/applications/
+update-desktop-database ~/.local/share/applications 2>/dev/null || true
+```
+
+Если нужно обновить launcher'ы после `git pull`, просто выполните ту же команду копирования ещё раз.
+
+## 👥 Поддержка профилей
+
+Скрипты используют два уровня данных:
+
+- `profiles.list` — переносимый список имён профилей
+- `profile-templates/<Name>/` — переносимые файлы профиля
+- `globalStorage/storage.json` — локальная карта имени профиля к machine-specific hash
+
+Это устраняет проблему, когда на Windows и Linux один и тот же профиль получает разный каталог `profiles/<hash>`.
+
+## 🔄 Миграция со старой схемы
+
+Если раньше в git лежали файлы вида `profiles/<hash>/settings.json` и `profiles/<hash>/extensions.list`, они могли работать только на той машине, где были созданы.
+
+Теперь переносимым источником истины считаются:
+
+- `settings.json`
+- `extensions.list`
+- `profiles.list`
+- `profile-templates/<Name>/`
+
+А `profiles/<hash>/` остаются только локальными рабочими каталогами VSCodium.
+
+## ⚠️ Примечания
+
+### PowerShell Execution Policy
+
+Если PowerShell-скрипты не запускаются:
 
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 ```
 
-### .gitignore
+### Что попадает в git
 
-Файл `.gitignore` настроен на исключение временных файлов, логов и кэша, сохраняя только переносимые настройки и шаблоны профилей.
+`.gitignore` настроен так, чтобы сохранять только переносимые настройки, шаблоны профилей, скрипты и versioned hooks.

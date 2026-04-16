@@ -4,7 +4,7 @@
         {
             "label": "Sync (Startup)",
             "type": "shell",
-            "command": "pwsh",
+            "command": "powershell.exe",
             "args": [
                 "-NoProfile",
                 "-ExecutionPolicy",
@@ -32,6 +32,81 @@
                 "reveal": "never",
                 "hidden": true
             }
+        },
+        {
+            "label": "Sync Now",
+            "type": "shell",
+            "command": "powershell.exe",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "${workspaceFolder}/.scripts/Sync.ps1"
+            ],
+            "linux": {
+                "command": "bash",
+                "args": [
+                    "${workspaceFolder}/.scripts/sync.sh"
+                ]
+            },
+            "osx": {
+                "command": "bash",
+                "args": [
+                    "${workspaceFolder}/.scripts/sync.sh"
+                ]
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Export Profiles",
+            "type": "shell",
+            "command": "powershell.exe",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "${workspaceFolder}/.scripts/Export.ps1"
+            ],
+            "linux": {
+                "command": "bash",
+                "args": [
+                    "${workspaceFolder}/.scripts/export.sh"
+                ]
+            },
+            "osx": {
+                "command": "bash",
+                "args": [
+                    "${workspaceFolder}/.scripts/export.sh"
+                ]
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Install Git Hooks",
+            "type": "shell",
+            "command": "powershell.exe",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "${workspaceFolder}/.scripts/Install-Hooks.ps1"
+            ],
+            "linux": {
+                "command": "bash",
+                "args": [
+                    "${workspaceFolder}/.scripts/install-hooks.sh"
+                ]
+            },
+            "osx": {
+                "command": "bash",
+                "args": [
+                    "${workspaceFolder}/.scripts/install-hooks.sh"
+                ]
+            },
+            "problemMatcher": []
         }
     ]
 }

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=VSCodium Install Hooks
+Comment=Подключение versioned git hooks для автoэкспорта перед коммитом
+Exec=env bash -lc "$HOME/.config/VSCodium/User/.scripts/install-hooks.sh"
+Icon=vscodium
+Terminal=true
+Categories=Development;IDE;Utility;
+StartupNotify=true

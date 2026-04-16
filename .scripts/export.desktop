@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=VSCodium Export Profiles
+Comment=Экспорт локальных профилей и расширений в репозиторий
+Exec=env bash -lc "$HOME/.config/VSCodium/User/.scripts/export.sh"
+Icon=vscodium
+Terminal=true
+Categories=Development;IDE;Utility;
+StartupNotify=true
