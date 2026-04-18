@@ -2,5 +2,7 @@
     "terminal.integrated.commandsToSkipShell": [
         "kilo-code.new.agentManagerOpen",
         "kilo-code.new.agentManager.showTerminal"
-    ]
+    ],
+    "git.confirmSync": false,
+    "git.autofetch": true
 }

@@ -2,7 +2,7 @@
 Version=1.0
 Type=Application
 Name=VSCodium Launch
-Comment=Git pull, синхронизация профилей и запуск VSCodium
+Comment=Git pull, sync, запуск VSCodium и export после закрытия
 Exec=env bash -lc "$HOME/.config/VSCodium/User/.scripts/launch.sh"
 Icon=vscodium
 Terminal=false

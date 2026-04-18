@@ -1,4 +1,4 @@
-# Windows: синхронизирует настройки и затем запускает VSCodium
+# Windows: синхронизирует настройки, запускает VSCodium, ждёт закрытия и затем делает export
 
 $ScriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path $MyInvocation.MyCommand.Path -Parent }
 $UserDir = Split-Path $ScriptDir -Parent
@@ -18,7 +18,10 @@ Push-Location $UserDir
 try {
     & (Join-Path $ScriptDir "Sync.ps1")
     $VSCodium = Find-VSCodium
-    & $VSCodium $UserDir
+    Write-Host "Launching VSCodium and waiting for window close..." -ForegroundColor Cyan
+    & $VSCodium --wait $UserDir
+    Write-Host "VSCodium closed. Exporting local profile state..." -ForegroundColor Cyan
+    & (Join-Path $ScriptDir "Export.ps1")
 } finally {
     Pop-Location
 }

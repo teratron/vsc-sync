@@ -19,7 +19,7 @@
 
 ### Поток `repo -> local VSCodium`
 
-Этот поток используют `Sync.ps1`, `sync.sh`, `Launch.ps1`, `launch.sh`.
+Этот поток используют `Sync.ps1`, `sync.sh`, `Launch.ps1`, `Launch.bat`, `launch.sh`.
 
 Они делают:
 
@@ -44,10 +44,12 @@
 
 ## 🚀 Скрипты и сценарии
 
-### Windows PowerShell
+### Windows PowerShell / CMD
 
 - `.\.scripts\Launch.ps1`
-  - полный сценарий: `git pull` -> `sync` -> запуск VSCodium
+  - полный сценарий: `git pull` -> `sync` -> запуск VSCodium -> ожидание закрытия -> `export`
+- `.\.scripts\Launch.bat`
+  - CMD/BAT-вход в тот же launcher для ярлыков и запуска без PowerShell-команды вручную
 - `.\.scripts\Sync.ps1`
   - `git pull` и синхронизация профилей без запуска IDE
 - `.\.scripts\Export.ps1`
@@ -62,7 +64,7 @@
 ### Linux / macOS
 
 - `bash .scripts/launch.sh`
-  - полный сценарий: `git pull` -> `sync` -> запуск VSCodium
+  - полный сценарий: `git pull` -> `sync` -> запуск VSCodium -> ожидание закрытия -> `export`
 - `bash .scripts/sync.sh`
   - `git pull` и синхронизация профилей без запуска IDE
 - `bash .scripts/export.sh`
@@ -89,11 +91,12 @@
    - Linux/macOS: `bash .scripts/install-hooks.sh`
 4. Запускайте IDE через launcher:
    - Windows: `.\.scripts\Launch.ps1`
+   - Windows CMD/BAT: `.\.scripts\Launch.bat`
    - Linux/macOS: `bash .scripts/launch.sh`
 
 ### Обычный ежедневный запуск
 
-- если нужен полный сценарий, запускайте `.\.scripts\Launch.ps1` или `bash .scripts/launch.sh`
+- если нужен полный сценарий с export после закрытия IDE, запускайте `.\.scripts\Launch.ps1`, `.\.scripts\Launch.bat` или `bash .scripts/launch.sh`
 - если IDE уже открыта, можно запустить только `.\.scripts\Sync.ps1` или `bash .scripts/sync.sh`
 
 ### После изменения профилей или extensions
@@ -102,6 +105,8 @@
 - именованные профили и их extensions нужно экспортировать:
   - Windows: `.\.scripts\Export.ps1`
   - Linux/macOS: `bash .scripts/export.sh`
+
+Если IDE была запущена через `Launch.ps1`, `Launch.bat` или `launch.sh`, этот export выполнится автоматически после закрытия окна VSCodium.
 
 ### Перед коммитом
 
@@ -161,7 +166,7 @@ git config --local --unset core.hooksPath
 В `.scripts/` лежат готовые `.desktop` файлы:
 
 - `launch.desktop`
-  - `git pull` + `sync` + запуск IDE
+  - `git pull` + `sync` + запуск IDE + `export` после закрытия
 - `sync.desktop`
   - `git pull` + `sync` без запуска IDE
 - `export.desktop`
