@@ -93,8 +93,8 @@
 
 ### Обычный ежедневный запуск
 
-- если нужен полный сценарий, запускайте `Launch.ps1` или `launch.sh`
-- если IDE уже открыта, можно запустить только `Sync.ps1` или `sync.sh`
+- если нужен полный сценарий, запускайте `.\.scripts\Launch.ps1` или `bash .scripts/launch.sh`
+- если IDE уже открыта, можно запустить только `.\.scripts\Sync.ps1` или `bash .scripts/sync.sh`
 
 ### После изменения профилей или extensions
 
@@ -109,14 +109,14 @@
 
 #### Вариант 1. Ручной export
 
-1. Запустите `Export.ps1` или `export.sh`
+1. Запустите `.\.scripts\Export.ps1` или `bash .scripts/export.sh`
 2. Выполните `git add`, `git commit`, `git push`
 
 Этот вариант проще и прозрачнее. Если вы привыкли сами контролировать изменения, он предпочтительнее.
 
 #### Вариант 2. Автоматический export через hook
 
-1. Подключите `.githooks` через `Install-Hooks.ps1` или `install-hooks.sh`
+1. Подключите `.githooks` через `.\.scripts\Install-Hooks.ps1` или `bash .scripts/install-hooks.sh`
 2. После этого перед коммитом не запускайте ручной `export`
 
 Если установлен hook, ручной `export` перед коммитом больше не нужен, иначе export выполнится дважды.

@@ -4,5 +4,7 @@
         "kilo-code.new.agentManager.showTerminal"
     ],
     "git.confirmSync": false,
-    "git.autofetch": true
+    "git.autofetch": true,
+    "buraq_mql5_mql4.Metaeditor.Include5Dir": "C:\\Users\\Oleg\\AppData\\Roaming\\MetaQuotes\\Terminal\\1823AFE2E063BC8A03FBA1DCEB074D7F\\MQL5\\Include",
+    "buraq_mql5_mql4.Metaeditor.Include4Dir": "C:\\Users\\Oleg\\AppData\\Roaming\\MetaQuotes\\Terminal\\0B5C5552DA53B624A3CF5DCF17492076\\MQL4\\Include"
 }
